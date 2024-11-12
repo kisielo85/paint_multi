@@ -2,14 +2,14 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 let = isDown = false
 
+let cache_pos = { x: 0, y: 0 }
 let pos = { x: 0, y: 0 }
 let offset = { x: canvas.offsetLeft, y: canvas.offsetTop }
 
 let tool = {
-    type: "brush",
+    type: "rect",
     width: 20,
     color: "green",
-    shape: "circle", //circle, square
 }
 
 ctx.lineWidth = tool.width;
@@ -21,46 +21,61 @@ function mouseDown() {
     switch (tool.type) {
         case "brush":
             drawPoint(pos.x, pos.y);
-            ctx.beginPath()
             break;
+        case "rect":
+        case "line":
+            cache_pos.x = pos.x
+            cache_pos.y = pos.y
     }
 }
+
 function mouseUp() {
     isDown = false
-    ctx.stroke()
+    switch (tool.type) {
+        case "rect":
+            drawRect(cache_pos, pos)
+            break;
+        case "line":
+            drawLine(cache_pos,pos)
+    }
 }
 
 function mouseMove(event) {
-    old_x=pos.x
-    old_y=pos.y
+    old_pos = { x: pos.x, y: pos.y }
     pos.x = event.clientX - offset.x;
     pos.y = event.clientY - offset.y;
     if (!isDown) { return }
-    drawLine(old_x,old_y,pos.x,pos.y)
+
+    switch (tool.type) {
+        case "brush":
+            drawLine(old_pos, pos)
+            break;
+    }
 }
 
 function drawPoint(x, y) {
-    w = tool.width
-    x = pos.x
-    y = pos.y
+    const w = tool.width
     switch (tool.shape) {
-        case "square":
-            ctx.fillRect(x - w / 2, y - w / 2, w, w);
-            break;
         case "circle":
             ctx.beginPath()
-            ctx.arc(x, y, 1, 0, Math.PI * 2, true)
+            ctx.lineWidth = 1;
+            ctx.arc(x, y, w / 2 - 1, 0, Math.PI * 2, true)
+            ctx.fill()
             ctx.stroke()
             break;
     }
-
 }
 
-function drawLine(x1,y1,x2,y2) {
+function drawLine(from, to) {
     ctx.beginPath()
+    ctx.lineWidth = tool.width;
     ctx.lineCap = "round";
-    ctx.moveTo(x1,y1)
-    ctx.lineTo(pos.x, pos.y)
+    ctx.moveTo(from.x, from.y)
+    ctx.lineTo(to.x, to.y)
     ctx.stroke()
+}
 
+function drawRect(from, to) {
+    ctx.rect(from.x, from.y, to.x - from.x, to.y - from.y)
+    ctx.stroke()
 }
