@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Paint Multiplayer</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<button onclick="openList()" id="openPlayerList">+</button>
+<div id="playersList" class="closed">
+    <button onclick="closeList()" id="closePlayerList">X</button>
+    <h2>Players</h2>
+</div>
+<canvas id="myCanvas"></canvas>
+<div class="toolBar">
+    <p>Tool Bar</p>
+</div>
+</body>
+</html>  
+<script>
+    function closeList(){
+    document.getElementById('playersList').classList.remove('open');
+    document.getElementById('closePlayerList').style.display = 'none';
+    document.getElementById('openPlayerList').style.display = 'block';
+}
+
+function openList() {
+    document.getElementById('playersList').classList.add('open');
+    document.getElementById('openPlayerList').style.display = 'none';
+    document.getElementById('closePlayerList').style.display = 'block';
+}
+</script>
