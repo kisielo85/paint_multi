@@ -6,21 +6,13 @@ let cache_pos = { x: 0, y: 0 }
 let pos = { x: 0, y: 0 }
 let offset = { x: canvas.offsetLeft, y: canvas.offsetTop }
 
-let tool = {
-    type: "rect",
-    width: 20,
-    color: "green",
-}
-
-ctx.lineWidth = tool.width;
-ctx.strokeStyle = tool.color
-ctx.fillStyle = tool.color
+let tool = { type: "brush", size: 5, color: "black" }
 
 function mouseDown() {
     isDown = true
     switch (tool.type) {
         case "brush":
-            drawPoint(pos.x, pos.y);
+            drawPoint(pos);
             break;
         case "rect":
         case "line":
@@ -36,7 +28,7 @@ function mouseUp() {
             drawRect(cache_pos, pos)
             break;
         case "line":
-            drawLine(cache_pos,pos)
+            drawLine(cache_pos, pos)
     }
 }
 
@@ -53,22 +45,18 @@ function mouseMove(event) {
     }
 }
 
-function drawPoint(x, y) {
-    const w = tool.width
-    switch (tool.shape) {
-        case "circle":
-            ctx.beginPath()
-            ctx.lineWidth = 1;
-            ctx.arc(x, y, w / 2 - 1, 0, Math.PI * 2, true)
-            ctx.fill()
-            ctx.stroke()
-            break;
-    }
+function drawPoint(cords) {
+    const w = tool.size
+    ctx.beginPath()
+    ctx.lineWidth = 1;
+    ctx.arc(cords.x, cords.y, w / 2, 0, Math.PI * 2, true)
+    ctx.fill()
+    ctx.stroke()
 }
 
 function drawLine(from, to) {
     ctx.beginPath()
-    ctx.lineWidth = tool.width;
+    ctx.lineWidth = tool.size;
     ctx.lineCap = "round";
     ctx.moveTo(from.x, from.y)
     ctx.lineTo(to.x, to.y)
@@ -79,3 +67,19 @@ function drawRect(from, to) {
     ctx.rect(from.x, from.y, to.x - from.x, to.y - from.y)
     ctx.stroke()
 }
+
+function setTool({type = false, size = false, color = false}) {
+    if (type) { tool.type = type }
+    if (size) {
+        tool.size = size
+        ctx.lineWidth = size;
+    }
+    if (color) {
+        tool.color = color
+        ctx.strokeStyle = color
+        ctx.fillStyle = color
+    }
+    
+
+}
+setTool({type:"brush",size:10,color:"red"})
