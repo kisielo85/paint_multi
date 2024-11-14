@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="style/game.css" />
 </head>
 
-<body>
+<body onresize="win_resize()">
     <button onclick="openList()" id="openPlayerList">+</button>
     <div id="playersList" class="closed">
         <button onclick="closeList()" id="closePlayerList">X</button>
@@ -19,6 +19,7 @@
         <button onclick='setTool({type:"brush"})'>brush</button>
         <button onclick='setTool({type:"line"})'>line</button>
         <button onclick='setTool({type:"rect"})'>rect</button>
+        <button onclick='setTool({type:"eraser"})'>eraser</button>
     </div>
     
     <script src="script/game_ui.js"></script>

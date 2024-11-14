@@ -1,3 +1,4 @@
+
 function closeList() {
     document.getElementById('playersList').classList.remove('open');
     document.getElementById('closePlayerList').style.display = 'none';

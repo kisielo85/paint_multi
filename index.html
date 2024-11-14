@@ -17,10 +17,12 @@
             <button class="btn btn-success">Rooms</button>
         </div>
         <div class="icon">
-            <img src="web/img/cat.jpg" alt="icon" style="width:75px;height:75px;"><br>
-            <button class="btn btn-dark">Prev</button>
-            <button class="btn btn-dark">Next</button>
+            <img id="pfp_img" src="web/img/prof/0.jpg" alt="icon" style="width:75px;height:75px;"><br>
+            <button class="btn btn-dark" onclick="change_prof(-1)">Prev</button>
+            <button class="btn btn-dark" onclick="change_prof(1)">Next</button>
         </div>
     </div>
+
+    <script src="web/script/index.js"></script>
 </body>
 </html>
