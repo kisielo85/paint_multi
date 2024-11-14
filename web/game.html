@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Paint Multiplayer</title>
+    <link rel="stylesheet" type="text/css" href="style/game.css" />
+</head>
+
+<body>
+    <button onclick="openList()" id="openPlayerList">+</button>
+    <div id="playersList" class="closed">
+        <button onclick="closeList()" id="closePlayerList">X</button>
+        <h2>Players</h2>
+    </div>
+    <canvas id="canvas" width="1920" height="1080" onmousedown="mouseDown()" onmouseup="mouseUp()" onmousemove="mouseMove(event)"></canvas>
+    
+    <div class="toolBar">
+        <!-- taki placeholder, UI by sie przydało -->
+        <button onclick='setTool({type:"brush"})'>brush</button>
+        <button onclick='setTool({type:"line"})'>line</button>
+        <button onclick='setTool({type:"rect"})'>rect</button>
+    </div>
+    
+    <script src="script/game_ui.js"></script>
+    <script src="script/drawing.js"></script>
+</body>
+</html>
+
