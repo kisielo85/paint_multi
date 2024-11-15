@@ -6,6 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="web/style/index.css">
     <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <div class="menu">
@@ -24,5 +25,27 @@
     </div>
 
     <script src="web/script/index.js"></script>
+    <script>
+        let current_prof = 0;
+        const max_prof = 3
+        const prof_img = document.getElementById("pfp_img")
+        
+        function change_prof(x){
+            current_prof += x
+            if (current_prof < 0){current_prof = max_prof}
+            else if (current_prof > max_prof){current_prof = 0}
+            prof_img.src=`web/img/prof/${current_prof}.jpg`
+        }
+
+        // gets all public avaible rooms
+        axios.get(`http://${serverURL}/rooms`).then(output => {console.log(output.data)})
+
+        // gets room code and sents its to make one
+        /*
+        axios.get(`http://${serverURL}/gen-room`).then(codeData => {
+            axios.post(`http://${serverURL}/add-room`, { roomCode:codeData.data }).then(console.log)
+        })
+        */
+    </script>
 </body>
 </html>

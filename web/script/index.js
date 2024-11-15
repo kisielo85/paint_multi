@@ -1,13 +1,5 @@
-let current_prof=0;
-const max_prof=3
-const prof_img = document.getElementById("pfp_img")
-
-function change_prof(x){
-    current_prof = current_prof + x <= max_prof ? current_prof + x : 0;
-    prof_img.src=`web/img/prof/${current_prof}.jpg`
-}
-
-const ws = new WebSocket("ws://localhost:80");
+const serverURL = "127.0.0.1:80"
+const ws = new WebSocket("ws://" + serverURL);
 
 //sends data/buffer to WebSocket server
 function sendMessage(message) {
@@ -18,6 +10,7 @@ function sendMessage(message) {
     ws.send(message);
     return
 }
+
 
 /*
 

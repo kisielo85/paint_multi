@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "canvas": "^2.11.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
     "ws": "^8.18.0"
   }
 }
