@@ -6,8 +6,7 @@ body{
     linear-gradient(to bottom, rgb(105, 105, 105) 1px, transparent 1px);
 }
 
-.menu{
-    display: flex;
+.menu, .roomCreate, .roomSelect{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -15,7 +14,6 @@ body{
     width: 500px;
     padding: 10px;
     background-color: white;
-    text-align: center;
     outline: 2px solid black;
     border-radius: 10px;
 }
@@ -25,5 +23,24 @@ body{
     border-radius: 5px;
 }
 
-.icon{
+.menu{
+    display: flex;
+    text-align: center;
+}
+
+.roomSelect{
+    width: 700px;
+    max-height: 70%;
+}
+
+
+.roomh{
+    text-align: center;
+    width: 100%;
+    border-bottom: 1px solid black;
+    height: 52px;
+}
+
+.buttons{
+    text-align: center;
 }

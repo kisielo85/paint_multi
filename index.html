@@ -9,18 +9,35 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <div class="menu">
+    <div class="menu" id="main">
         <div>
             <h2>pencill.io</h2>
             Name: <input type="text"><br>
             <button class="btn btn-primary">Join Public</button>
-            <button class="btn btn-light">Create room</button>
-            <button class="btn btn-success">Rooms</button>
+            <button class="btn btn-light" onclick="create_room()">Create room</button>
+            <button class="btn btn-success" onclick="rooms()">Rooms</button>
         </div>
         <div class="icon">
             <img id="pfp_img" src="web/img/prof/0.jpg" alt="icon" style="width:75px;height:75px;"><br>
             <button class="btn btn-dark" onclick="change_prof(-1)">Prev</button>
             <button class="btn btn-dark" onclick="change_prof(1)">Next</button>
+        </div>
+    </div>
+
+    <div class="roomSelect"  id="rooms" style="visibility: hidden;">
+        <h2 class="roomh">Select a Room</h2>
+        <div class="rooms"></div>
+        <div class="buttons">
+            <button class="btn btn-success">create room</button>
+            <button class="btn btn-danger" onclick="back()">back</button>
+        </div>
+    </div>
+
+    <div class="roomCreate"  id="roomCreate" style="visibility: hidden;">
+        <h2 class="roomh">Create a Room</h2>
+        Name: <input type="text"><br>
+        <div class="buttons">
+            <button class="btn btn-danger" onclick="back()">back</button>
         </div>
     </div>
 
@@ -35,6 +52,22 @@
             if (current_prof < 0){current_prof = max_prof}
             else if (current_prof > max_prof){current_prof = 0}
             prof_img.src=`web/img/prof/${current_prof}.jpg`
+        }
+
+        function rooms(){
+            document.getElementById('main').style.visibility = "hidden";
+            document.getElementById('rooms').style.visibility = "visible";
+        }
+
+        function create_room(){
+            document.getElementById('main').style.visibility = "hidden";
+            document.getElementById('roomCreate').style.visibility = "visible";
+        }
+
+        function back(){
+            document.getElementById('main').style.visibility = "visible";
+            document.getElementById('roomCreate').style.visibility = "hidden";
+            document.getElementById('rooms').style.visibility = "hidden";
         }
 
         // gets all public avaible rooms
