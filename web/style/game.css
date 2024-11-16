@@ -53,16 +53,6 @@ body {
     background-color: #003d99;
 }
 
-#myCanvas {
-    display: block;
-    margin: auto;
-    border: 2px solid #4da6ff;
-    width: 1920px;
-    height: 1080px;
-    background-color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
 .toolBar {
     position: fixed;
     top: 10px;
@@ -75,4 +65,8 @@ body {
     z-index: 5;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
+}
+
+canvas{
+    position: absolute;
 }

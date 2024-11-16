@@ -9,14 +9,15 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
-<body onresize="win_resize()">
+<body>
     <button onclick="openList()" id="openPlayerList">+</button>
     <div id="playersList" class="closed">
         <button onclick="closeList()" id="closePlayerList">X</button>
         <h2>Players</h2>
     </div>
     <canvas id="canvas" width="1920" height="1080" onmousedown="mouseDown()" onmouseup="mouseUp()" onmousemove="mouseMove(event)"></canvas>
-    
+    <canvas id="canvas_preview" width="1920" height="1080" style="pointer-events: none;"></canvas>
+
     <div class="toolBar">
         <!-- taki placeholder, UI by sie przydało -->
         <button onclick='setTool({type:"brush"})'>brush</button>
