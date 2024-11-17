@@ -7,9 +7,18 @@ function sendMessage(message) {
         ws.send(JSON.stringify(message))
         return
     }
+    console.log("SEND:",message)
     ws.send(message);
     return
 }
+ws.onmessage = (event) => {
+    const d=JSON.parse(event.data)
+    console.log(d);
+    switch (d.action){
+        case "draw":
+            receiveData(d.points,d.type,d.size,d.color)
+    }
+};
 
 
 /*
@@ -18,9 +27,7 @@ ws.onopen = () => {
    console.log("Connected to WebSocket server");
 };
 
-ws.onmessage = (event) => {
-    console.log(event.data);
-};
+
 ws.onclose = () => {
     console.log("Disconnected from WebSocket server");
 };

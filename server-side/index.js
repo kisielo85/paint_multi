@@ -29,7 +29,13 @@ app.use(express.json());
 
 const catURL = "https://http.cat/"
 
-let RoomList = [];
+let Rooms = [
+    {
+        name: "public",
+        clients:[],
+        canvas: null,
+    }
+];
 
 // Generate roomCode wich dosnt exist yet
 function genRoom() {
@@ -39,6 +45,7 @@ function genRoom() {
 
 // Routes
 app.get('/rooms', (req, res) => {
+    const RoomList = Rooms.map(({ clients, ...room }) => room);
     res.json(RoomList);
 });
 
@@ -77,8 +84,10 @@ console.log(`WebSocket running on ws://localhost`);
 
 wss.on('connection', (client) => {
     console.log('New WebSocket client connected');
-
     client.send('Welcome to the WebSocket server!');
+    // 0 - publiczny pokój
+    client.roomId=0
+    Rooms[0].clients.push(client)
 
     client.on('message', (message) => {
         let data;
@@ -88,7 +97,11 @@ wss.on('connection', (client) => {
             data = String(message);
         }
         console.log('Received:', data);
-        client.send(`Server received: ${message}`);
+        for (const c of Rooms[client.roomId].clients) {
+            if (c == client) continue
+            c.send(`${message}`)
+        }
+        //client.send(`Server received: ${message}`);
     });
 
     client.on('close', () => {

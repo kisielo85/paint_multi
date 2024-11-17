@@ -23,6 +23,8 @@ function mouseDown() {
     switch (tool.type) {
         case "brush":
         case "eraser":
+            bufferPoints = [[pos.x, pos.y]]
+            bufferCount = 1
             drawLine(pos, pos);
             break;
 
@@ -32,7 +34,6 @@ function mouseDown() {
             ctx_pr.strokeStyle = tool.color
             cache_pos.x = pos.x
             cache_pos.y = pos.y
-            bufferPoints = [pos.x, pos.y]
             break;
     }
 }
@@ -64,8 +65,8 @@ function mouseUp() {
 function mouseMove(event) {
     const rect = canvas.getBoundingClientRect();
     old_pos = { x: pos.x, y: pos.y }
-    pos.x = event.clientX - rect.left;
-    pos.y = event.clientY - rect.top;
+    pos.x = parseInt(event.clientX - rect.left);
+    pos.y = parseInt(event.clientY - rect.top);
 
     if (cursor_visible) {
         cursor.style.left = `${event.pageX}px`;
@@ -129,7 +130,6 @@ function setTool({ type = false, size = false, color = false }) {
         // brush i eraser mają customowy kursor
         if (type == "brush" || type == "eraser") {
             canvas.style.cursor = "none";
-            console.log("suser")
             cursor.style.background = `url('img/cursor/${type}.svg')`
             cursor.style.backgroundSize = 'contain'
             cursor.hidden = false
@@ -157,6 +157,7 @@ function sendData(points = [[cache_pos.x, cache_pos.y], [pos.x, pos.y]], type = 
         points[1][0] -= points[0][0]
         points[1][1] -= points[0][1]
     }
+    sendMessage({action:"draw",points:points,type:type,size:size,color:color})
     //console.log(points,type,size,color)
     //receiveData(points,type,4,"red")
 }
@@ -173,9 +174,10 @@ function receiveData(p, type, size, color) {
         case "eraser":
         case "line":
             ctx.moveTo(p[0][0], p[0][1])
-            for (let i = 1; i < p.length; i++) {
+            for (let i = 0; i < p.length; i++) {
                 ctx.lineTo(p[i][0], p[i][1])
             }
+            break;
 
         case "rect":
             ctx.rect(p[0][0], p[0][1], p[1][0], p[1][1])
