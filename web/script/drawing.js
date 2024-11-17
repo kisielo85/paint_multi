@@ -1,3 +1,4 @@
+const root = document.querySelector(':root');
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const canvas_preview = document.getElementById("canvas_preview");
@@ -6,14 +7,16 @@ ctx.lineCap = "round";
 ctx_pr.lineCap = "round";
 ctx_pr.globalAlpha = 0.3
 
-let = isDown = false
+const cursor = document.getElementById('custom-cursor');
+let cursor_visible = true
+let isDown = false
 
 let pos = { x: 0, y: 0 } // pozycja myszy
 let cache_pos = { x: 0, y: 0 } // zapisana pozycja, używane do prostokątków itp
 let bufferPoints = [] // dane czekające na wysłanie
 let bufferCount = 0 // ilość danych w bufferPoints
 let tool = {} // ustawienia narzędzia
-setTool({ type: "brush", size: 15, color: "black" })
+setTool({ type: "brush", size: 30, color: "green" })
 
 function mouseDown() {
     isDown = true
@@ -63,6 +66,11 @@ function mouseMove(event) {
     old_pos = { x: pos.x, y: pos.y }
     pos.x = event.clientX - rect.left;
     pos.y = event.clientY - rect.top;
+
+    if (cursor_visible) {
+        cursor.style.left = `${event.pageX}px`;
+        cursor.style.top = `${event.pageY}px`;
+    }
 
     if (!isDown) { return }
 
@@ -117,8 +125,23 @@ function setTool({ type = false, size = false, color = false }) {
         tool.type = type
         if (type == "eraser") ctx.globalCompositeOperation = "destination-out"
         else ctx.globalCompositeOperation = "source-over"
+
+        // brush i eraser mają customowy kursor
+        if (type == "brush" || type == "eraser") {
+            canvas.style.cursor = "none";
+            console.log("suser")
+            cursor.style.background = `url('img/cursor/${type}.svg')`
+            cursor.style.backgroundSize = 'contain'
+            cursor.hidden = false
+        }
+        else {
+            canvas.style.cursor = "default"
+            cursor.hidden = true
+        }
+        cursor_visible=!cursor.hidden
     }
     if (size) {
+        root.style.setProperty('--tool-size', `${size*1.2}px`);
         tool.size = size
         ctx.lineWidth = size
     }
