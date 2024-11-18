@@ -59,11 +59,11 @@ body {
 }
 
 .slider {
-    writing-mode: bt-lr;
-    -webkit-appearance: slider-vertical;
-    appearance: slider-vertical;
-    width: 8px;
+    transform: rotate(-90deg);
+    width: 100px;
     height: 100px;
+    margin-left: -50px;
+    margin-right: -50px;
 }
 
 canvas {
@@ -81,6 +81,7 @@ canvas {
 }
 
 .player_prof {
+    pointer-events: none;
     position: absolute;
     left: 0px;
     top: 0px;
