@@ -79,14 +79,15 @@ function mouseMove(event) {
         case "brush":
         case "eraser":
             drawLine(old_pos, pos)
+            console.log("count",bufferPoints.length)
 
             // zapisuje ścieżke, i raz na jakiś czas ją wysyła
             bufferPoints.push([pos.x, pos.y])
             bufferCount += 1
-            if (bufferCount >= 19) {
+            if (bufferCount >= 30) {
                 sendDraw(bufferPoints)
-                bufferPoints = []
-                bufferCount = 0
+                bufferPoints = [[pos.x, pos.y]]
+                bufferCount = 1
             }
             break;
 
