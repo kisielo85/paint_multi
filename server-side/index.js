@@ -43,13 +43,18 @@ function genRoom() {
     return RoomList.findIndex(ele => ele === randString) === -1 ? randString : genRoom();
 }
 
+const pathClients = {};
+
 // Routes
-app.get('/rooms', (req, res) => {
-    const RoomList = Rooms.map(({ clients, ...room }) => room);
-    res.json(RoomList);
+app.get('/room', (req, res) => {
+    if(typeof req.query.code == undefined || req.query.code.length > 12){
+        res.send(false)
+        return
+    }
+    res.send(typeof pathClients["/room/"+req.query.code] != 'undefined')
 });
 
-app.get('/gen-room', (req, res) => {
+app.get('/gen-code', (req, res) => {
     const roomCode = genRoom();
     res.send(roomCode);
 });
@@ -80,8 +85,6 @@ const server = app.listen(config.PORT, () => {
 
 // WebSocket
 const wss = new WebSocket.Server({ noServer: true }); 
-
-const pathClients = {};
 
 // Handle upgrade requests
 server.on('upgrade', (request, socket, head) => {

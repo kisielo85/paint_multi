@@ -7,14 +7,15 @@
     <link rel="stylesheet" href="web/style/index.css">
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="config.js"></script>
 </head>
 <body>
     <div class="menu" id="main">
         <div>
             <h2>pencill.io</h2>
-            Name: <input type="text"><br>
+            Name: <input type="text" id="nameInput"><br>
             <button class="btn btn-warning" onclick="create_room()">Create room</button>
-            <button class="btn btn-primary">Join Room</button>
+            <button class="btn btn-primary" onclick="room()">Join Room</button>
             <button class="btn btn-primary">Join Public</button>
         </div>
         <div class="icon">
@@ -24,12 +25,12 @@
         </div>
     </div>
 
-    <div class="roomSelect"  id="rooms" style="visibility: hidden;">
-        <h2 class="roomh">Select a Room</h2>
-        <div class="rooms"></div>
-        <div class="buttons">
-            <button class="btn btn-success">create room</button>
-            <button class="btn btn-danger" onclick="back()">back</button>
+    <div class="roomSelect"  id="roomSelect" style="visibility: hidden;">
+        <h2 class="roomh">Join Room</h2>
+        <div style="display: flex;justify-content: center;">
+            <input type="text" oninput="joinCode = this.value">
+            <button class="btn btn-success" onclick="join()">Join</button>
+            <button class="btn btn-danger" onclick="back()">Back</button>
         </div>
     </div>
 
@@ -45,7 +46,7 @@
         let current_prof = 0;
         const max_prof = 12
         const prof_img = document.getElementById("pfp_img")
-        
+
         function change_prof(x){
             current_prof += x
             if (current_prof < 0){current_prof = max_prof}
@@ -53,10 +54,10 @@
             prof_img.src=`web/img/prof/${current_prof}.jpg`
         }
 
-        /*function rooms(){
+        function room(){
             document.getElementById('main').style.visibility = "hidden";
-            document.getElementById('rooms').style.visibility = "visible";
-        }*/
+            document.getElementById('roomSelect').style.visibility = "visible";
+        }
 
         function create_room(){
             document.getElementById('main').style.visibility = "hidden";
@@ -66,11 +67,26 @@
         function back(){
             document.getElementById('main').style.visibility = "visible";
             document.getElementById('roomCreate').style.visibility = "hidden";
-            document.getElementById('rooms').style.visibility = "hidden";
+            document.getElementById('roomSelect').style.visibility = "hidden";
+        }
+
+        let joinCode = ""
+
+        async function join(){
+            let name = document.getElementById("nameInput").value.trim()
+            if(name.length == 0){
+                alert("go back and input name")
+                return
+            }
+            if((await axios.get(`http://${serverURL}/room?code=${joinCode}`)).data){
+                window.location.href = `./web/game.html?username=${name}&img=${current_prof}&code=${joinCode}`
+            }else{
+                alert("room noot exist :<")
+            }
         }
 
         // gets all public avaible rooms
-        axios.get(`http://${serverURL}/rooms`).then(output => {console.log(output.data)})
+        //axios.get(`http://${serverURL}/rooms`).then(output => {console.log(output.data)})
 
         // gets room code and sents its to make one
         /*
