@@ -62,10 +62,6 @@ function mouseUp() {
     }
 }
 
-setInterval(() =>{
-    sendMessage({"action":"move", "pos":pos})
-}, 150)
-
 function mouseMove(event) {
     const rect = canvas.getBoundingClientRect();
     old_pos = { x: pos.x, y: pos.y }
@@ -142,10 +138,10 @@ function setTool({ type = false, size = false, color = false }) {
             canvas.style.cursor = "default"
             cursor.hidden = true
         }
-        cursor_visible=!cursor.hidden
+        cursor_visible = !cursor.hidden
     }
     if (size) {
-        root.style.setProperty('--tool-size', `${size*1.2}px`);
+        root.style.setProperty('--tool-size', `${size * 1.2}px`);
         tool.size = size
         ctx.lineWidth = size
     }
@@ -155,13 +151,22 @@ function setTool({ type = false, size = false, color = false }) {
     }
 }
 
+// wysyłanie pozycji myszki
+setInterval(() => { moveUpdate() }, 150)
+let last_pos = {x:0,y:0}
+function moveUpdate() {
+    if (pos.x === last_pos.x && pos.y === last_pos.y) { return }
+    last_pos = { ...pos }
+    sendMessage({ "action": "move", "pos": pos })
+}
+
 // wysyłanie danych
 function sendDraw(points = [[cache_pos.x, cache_pos.y], [pos.x, pos.y]], type = tool.type, size = tool.size, color = tool.color) {
     if (type == "rect") {
         points[1][0] -= points[0][0]
         points[1][1] -= points[0][1]
     }
-    sendMessage({action:"draw",points:points,type:type,size:size,color:color})
+    sendMessage({ action: "draw", points: points, type: type, size: size, color: color })
     //console.log(points,type,size,color)
     //receiveData(points,type,4,"red")
 }
