@@ -13,9 +13,9 @@
         <div>
             <h2>pencill.io</h2>
             Name: <input type="text"><br>
+            <button class="btn btn-warning" onclick="create_room()">Create room</button>
+            <button class="btn btn-primary">Join Room</button>
             <button class="btn btn-primary">Join Public</button>
-            <button class="btn btn-light" onclick="create_room()">Create room</button>
-            <button class="btn btn-success" onclick="rooms()">Rooms</button>
         </div>
         <div class="icon">
             <img id="pfp_img" src="web/img/prof/0.jpg" alt="icon" style="width:75px;height:75px;"><br>
@@ -41,10 +41,9 @@
         </div>
     </div>
 
-    <script src="web/script/network.js"></script>
     <script>
         let current_prof = 0;
-        const max_prof = 3
+        const max_prof = 12
         const prof_img = document.getElementById("pfp_img")
         
         function change_prof(x){
@@ -54,10 +53,10 @@
             prof_img.src=`web/img/prof/${current_prof}.jpg`
         }
 
-        function rooms(){
+        /*function rooms(){
             document.getElementById('main').style.visibility = "hidden";
             document.getElementById('rooms').style.visibility = "visible";
-        }
+        }*/
 
         function create_room(){
             document.getElementById('main').style.visibility = "hidden";

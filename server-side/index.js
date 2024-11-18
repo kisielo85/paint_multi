@@ -8,7 +8,7 @@ const config = require('./server-config.json');
 const charSets = [
     { min: 48, max: 57 },   //0-9
     { min: 65, max: 90 },   //A-Z
-    { min: 97, max: 122 },  //a-z
+    //{ min: 97, max: 122 },  //a-z
 ];
 
 // Generate string with random characters
@@ -79,32 +79,75 @@ const server = app.listen(config.PORT, () => {
 });
 
 // WebSocket
-const wss = new WebSocket.Server({ server });
-console.log(`WebSocket running on ws://localhost`);
+const wss = new WebSocket.Server({ noServer: true }); 
 
-wss.on('connection', (client) => {
-    console.log('New WebSocket client connected');
-    client.send('Welcome to the WebSocket server!');
-    // 0 - publiczny pokój
-    client.roomId=0
-    Rooms[0].clients.push(client)
+const pathClients = {};
 
-    client.on('message', (message) => {
+// Handle upgrade requests
+server.on('upgrade', (request, socket, head) => {
+    const roomCode = request.url.match(/^\/room\/([^?]+)/)
+    if(roomCode == null || roomCode[1].length > 12) return
+
+    const params = new URLSearchParams(request.url.split('?')[1]);
+    const username = params.get("username");
+    const imgID = params.get("img");
+    if(username == null || imgID == null || parseInt(imgID) == NaN) return
+    
+    const pathname = "/room/" + roomCode[1]
+    
+    // Handle WebSocket
+    wss.handleUpgrade(request, socket, head, (ws) => {
+        ws.path = pathname; // Store the path on the WebSocket instance
+        let id = 0;
+        if (!pathClients[pathname]) {
+            pathClients[pathname] = [];
+        }else{
+            console.log(pathClients[pathname][pathClients[pathname].length - 1])
+            id = pathClients[pathname][pathClients[pathname].length - 1].user.id + 1
+        }
+        ws.user = { "id":id, "username":username, "img":parseInt(imgID)}
+        console.log(ws)
+        pathClients[pathname].push(ws);
+        wss.emit('connection', ws, request);
+    });
+});
+
+// WebSocket server connection
+wss.on('connection', (ws) => {
+    console.log(`New WebSocket connection on path: ${ws.path}`);
+
+    pathClients[ws.path].forEach((client) => {
+        if (client !== ws && client.readyState === WebSocket.OPEN) 
+            client.send(JSON.stringify({"action":"connect", "user": ws.user}));
+    })
+
+    // Messages from clients
+    ws.on('message', (message) => {
         let data;
         try {
             data = JSON.parse(message);
         } catch {
             data = String(message);
         }
-        console.log('Received:', data);
-        for (const c of Rooms[client.roomId].clients) {
-            if (c == client) continue
-            c.send(`${message}`)
+
+        console.log(`Message:`, ws.user, data);
+        if(typeof data["action"] != 'undefined'){
+            if(data["action"] == "move" || data["action"] == "draw")
+                pathClients[ws.path].forEach((client) => {
+                    if (client !== ws && client.readyState === WebSocket.OPEN)
+                        client.send(JSON.stringify(data));
+                });
         }
-        //client.send(`Server received: ${message}`);
     });
 
-    client.on('close', () => {
-        console.log('Client disconnected');
+    // Clean up on disconnect
+    ws.on('close', () => {
+        console.log(`Connection closed on path: ${ws.path}`);
+        pathClients[ws.path].forEach((client) => {
+            if (client !== ws && client.readyState === WebSocket.OPEN)
+            client.send(JSON.stringify({"action":"disconnect", "userID": ws.user.id}));
+        })
+        pathClients[ws.path] = pathClients[ws.path].filter((client) => client !== ws);
+        if(pathClients[ws.path].length == 0) delete pathClients[ws.path]
     });
 });

@@ -44,7 +44,7 @@ function mouseUp() {
         case "brush":
         case "eraser":
             if (bufferCount == 0) break
-            sendData(bufferPoints)
+            sendDraw(bufferPoints)
             bufferPoints = []
             bufferCount = 0
             break;
@@ -52,15 +52,19 @@ function mouseUp() {
         case "rect":
             clear_preview()
             drawRect(cache_pos, pos)
-            sendData()
+            sendDraw()
             break;
 
         case "line":
             clear_preview()
             drawLine(cache_pos, pos)
-            sendData()
+            sendDraw()
     }
 }
+
+setInterval(() =>{
+    sendMessage({"action":"move", "pos":pos})
+}, 1000)
 
 function mouseMove(event) {
     const rect = canvas.getBoundingClientRect();
@@ -84,7 +88,7 @@ function mouseMove(event) {
             bufferPoints.push([pos.x, pos.y])
             bufferCount += 1
             if (bufferCount >= 49) {
-                sendData(bufferPoints)
+                sendDraw(bufferPoints)
                 bufferPoints = []
                 bufferCount = 0
             }
@@ -152,7 +156,7 @@ function setTool({ type = false, size = false, color = false }) {
 }
 
 // wysyłanie danych
-function sendData(points = [[cache_pos.x, cache_pos.y], [pos.x, pos.y]], type = tool.type, size = tool.size, color = tool.color) {
+function sendDraw(points = [[cache_pos.x, cache_pos.y], [pos.x, pos.y]], type = tool.type, size = tool.size, color = tool.color) {
     if (type == "rect") {
         points[1][0] -= points[0][0]
         points[1][1] -= points[0][1]
