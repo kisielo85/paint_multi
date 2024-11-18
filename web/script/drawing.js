@@ -175,7 +175,7 @@ function sendDraw(points = [[cache_pos.x, cache_pos.y], [pos.x, pos.y]], type = 
 
 // odbieranie ruchów innych graczy
 function receiveData(p, type, size, color) {
-    ctx.globalCompositeOperation = tool.type == "eraser" ? "destination-out" : "source-over"
+    ctx.globalCompositeOperation = type == "eraser" ? "destination-out" : "source-over"
     
     ctx.strokeStyle = color
     ctx.lineWidth = size
