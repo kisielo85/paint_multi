@@ -78,7 +78,7 @@
                 alert("go back and input name")
                 return
             }
-            if((await axios.get(`http://${serverURL}/room?code=${joinCode}`)).data){
+            if((await axios.get(`${(serverURL.startsWith("127.0.0.1") || serverURL.startsWith("localhost") ? "http" : "https")}://${serverURL}/room?code=${joinCode}`)).data){
                 window.location.href = `./web/game.html?username=${name}&img=${current_prof}&code=${joinCode}`
             }else{
                 alert("room noot exist :<")

@@ -1,5 +1,5 @@
 const urlParams = new URLSearchParams(window.location.href.split("?")[1])
-let roomCode = "3561261" // urlParams.get("code")
+let roomCode = urlParams.get("code")
 let userName = urlParams.get("username")
 let imageID = urlParams.get("img")
 console.log(userName, imageID, roomCode);
