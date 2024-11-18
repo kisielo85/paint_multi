@@ -16,7 +16,7 @@ let cache_pos = { x: 0, y: 0 } // zapisana pozycja, używane do prostokątków i
 let bufferPoints = [] // dane czekające na wysłanie
 let bufferCount = 0 // ilość danych w bufferPoints
 let tool = {} // ustawienia narzędzia
-setTool({ type: "brush", size: 30, color: "green" })
+setTool({ type: "brush", size: 30, color: "#000000" })
 
 function mouseDown() {
     isDown = true

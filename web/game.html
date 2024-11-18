@@ -24,10 +24,12 @@
     
     <div class="toolBar">
         <!-- taki placeholder, UI by sie przydało -->
-        <button onclick='setTool({type:"brush"})'>brush</button>
-        <button onclick='setTool({type:"line"})'>line</button>
-        <button onclick='setTool({type:"rect"})'>rect</button>
-        <button onclick='setTool({type:"eraser"})'>eraser</button>
+        <button onclick='setTool({type:"brush"})'><img src='img/cursor/paint-brush.svg' alt="brush" width="25" height="25"></button>
+        <button onclick='setTool({type:"line"})'><img src='img/cursor/paint-line.svg' alt="line" width="25" height="25"></button>
+        <button onclick='setTool({type:"rect"})'><img src='img/cursor/paint-square.svg' alt="rectangle" width="25" height="25"></button>
+        <button onclick='setTool({type:"eraser"})'><img src='img/cursor/paint-eraser.svg' alt="eraser" width="25" height="25"></button>
+        <input type="number" id="size" onchange='setTool({size:this.value})'  style="width: 50px;"/>
+        <input type="color" id="color" onchange='setTool({color:this.value})' style="width: 35px; height: 35px; margin-top: 4px;"/>
     </div>
     
     <script src="script/network.js"></script>
