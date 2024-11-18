@@ -7,7 +7,7 @@ console.log(userName, imageID, roomCode);
 if(roomCode == null || userName == null || imageID == null || parseInt(imageID) == NaN){
     window.location.href = "../index.html"
 }else{
-    const ws = new WebSocket(`ws://${serverURL}/room/${roomCode}?username=${encodeURIComponent(userName)}&img=${imageID}`);
+    const ws = new WebSocket(`${(serverURL.startsWith("127.0.0.1") || serverURL.startsWith("localhost") ? "ws" : "wss")}://${serverURL}/room/${roomCode}?username=${encodeURIComponent(userName)}&img=${imageID}`);
 
     //sends data/buffer to WebSocket server
     function sendMessage(message) {
