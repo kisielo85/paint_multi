@@ -1,6 +1,6 @@
 const pos_div=document.getElementById("players_container")
 function add_player(id,username,prof){
-    pos_div.innerHTML+=`<div id='player_${id}' class='player_prof'><img src='img/prof/${prof}.jpg'></div>`
+    pos_div.innerHTML+=`<div id='player_${id}' class='player_prof'><img src='img/prof/${prof}.jpg'><br>${username}</div>`
     console.log("amoo",id,username,prof)
 }
 
