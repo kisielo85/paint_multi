@@ -22,6 +22,16 @@ ws.onmessage = (event) => {
     switch (d.action){
         case "draw":
             receiveData(d.points,d.type,d.size,d.color)
+            break
+        case "move":
+            move_player(d.id,d.pos)
+            break
+        case "connect":
+            add_player(d.user.id,d.user.username,d.user.img)
+            break
+        case "disconnect":
+            del_player(d.id)
+            break
     }
 };
 

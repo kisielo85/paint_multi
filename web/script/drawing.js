@@ -64,7 +64,7 @@ function mouseUp() {
 
 setInterval(() =>{
     sendMessage({"action":"move", "pos":pos})
-}, 1000)
+}, 150)
 
 function mouseMove(event) {
     const rect = canvas.getBoundingClientRect();
@@ -87,7 +87,7 @@ function mouseMove(event) {
             // zapisuje ścieżke, i raz na jakiś czas ją wysyła
             bufferPoints.push([pos.x, pos.y])
             bufferCount += 1
-            if (bufferCount >= 49) {
+            if (bufferCount >= 19) {
                 sendDraw(bufferPoints)
                 bufferPoints = []
                 bufferCount = 0
