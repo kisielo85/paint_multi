@@ -1,8 +1,9 @@
-const serverURL = "127.0.0.1:80"
+//const serverURL = "localhost:2140"
+const serverURL = "paint_multi.153070065.xyz"
 let roomCode = "3561261"
 let userName ="googooGaga"
 let imageID = 1
-const ws = new WebSocket(`ws://${serverURL}/room/${roomCode}?username=${encodeURIComponent(userName)}&img=${imageID}`);
+const ws = new WebSocket(`wss://${serverURL}/room/${roomCode}?username=${encodeURIComponent(userName)}&img=${imageID}`);
 
 //sends data/buffer to WebSocket server
 function sendMessage(message) {

@@ -177,6 +177,7 @@ function receiveData(p, type, size, color) {
         case "brush":
         case "eraser":
         case "line":
+            ctx.lineJoin = "round";
             ctx.moveTo(p[0][0], p[0][1])
             for (let i = 0; i < p.length; i++) {
                 ctx.lineTo(p[i][0], p[i][1])
@@ -189,6 +190,7 @@ function receiveData(p, type, size, color) {
     }
     ctx.stroke()
 
+    ctx.lineJoin = "miter";
     ctx.strokeStyle = tool.color
     ctx.lineWidth = tool.size
     ctx.globalCompositeOperation = "source-over"
