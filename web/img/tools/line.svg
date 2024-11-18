@@ -2,7 +2,7 @@
 
  <g>
   <title>Layer 1</title>
-  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="49" x2="556" y1="556" x1="49" stroke-width="28" stroke="#000" fill="none"/>
+  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="49" x2="556" y1="556" x1="49" stroke-width="80" stroke="#000" fill="none"/>
   <ellipse ry="8" rx="8" id="svg_7" cy="51" cx="554" stroke-width="12" stroke="#000" fill="none"/>
   <ellipse ry="8" rx="8" id="svg_8" cy="554" cx="51" stroke-width="12" stroke="#000" fill="none"/>
  </g>

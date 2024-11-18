@@ -10,11 +10,7 @@
 </head>
 
 <body>
-    <button onclick="openList()" id="openPlayerList">+</button>
-    <div id="playersList" class="closed">
-        <button onclick="closeList()" id="closePlayerList">X</button>
-        <h2>Players</h2>
-    </div>
+
     <canvas id="canvas" width="1920" height="1080" onmousedown="mouseDown()" onmouseup="mouseUp()" onmousemove="mouseMove(event)"></canvas>
     <canvas id="canvas_preview" width="1920" height="1080" style="pointer-events: none;"></canvas>
     <div id="custom-cursor"></div>
@@ -23,13 +19,12 @@
     </div>
     
     <div class="toolBar">
-        <!-- taki placeholder, UI by sie przydało -->
-        <button onclick='setTool({type:"brush"})'><img src='img/cursor/paint-brush.svg' alt="brush" width="25" height="25"></button>
-        <button onclick='setTool({type:"line"})'><img src='img/cursor/paint-line.svg' alt="line" width="25" height="25"></button>
-        <button onclick='setTool({type:"rect"})'><img src='img/cursor/paint-square.svg' alt="rectangle" width="25" height="25"></button>
-        <button onclick='setTool({type:"eraser"})'><img src='img/cursor/paint-eraser.svg' alt="eraser" width="25" height="25"></button>
-        <input type="number" id="size" onchange='setTool({size:this.value})'  style="width: 50px;"/>
-        <input type="color" id="color" onchange='setTool({color:this.value})' style="width: 35px; height: 35px; margin-top: 4px;"/>
+        <button onclick='setTool({type:"brush"})' id="btn_brush" class="tool_btn"><img src='img/tools/brush.svg' alt="brush"></button><br>
+        <button onclick='setTool({type:"line"})' id="btn_line" class="tool_btn"><img src='img/tools/line.svg' alt="line"></button><br>
+        <button onclick='setTool({type:"rect"})' id="btn_rect" class="tool_btn"><img src='img/tools/rect.svg' alt="rectangle"></button><br>
+        <button onclick='setTool({type:"eraser"})' id="btn_eraser" class="tool_btn"><img src='img/tools/eraser.svg' alt="eraser"></button><br>
+        <input type="range" oninput='setTool({size:this.value})' class="slider" min="4" max="100" value="30"><br>
+        <input type="color" id="color" onchange='setTool({color:this.value})'/>
     </div>
     
     <script src="script/network.js"></script>

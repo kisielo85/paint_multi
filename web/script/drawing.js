@@ -15,7 +15,7 @@ let pos = { x: 0, y: 0 } // pozycja myszy
 let cache_pos = { x: 0, y: 0 } // zapisana pozycja, używane do prostokątków itp
 let bufferPoints = [] // dane czekające na wysłanie
 let bufferCount = 0 // ilość danych w bufferPoints
-let tool = {} // ustawienia narzędzia
+let tool = {type: "brush"} // ustawienia narzędzia
 setTool({ type: "brush", size: 30, color: "#000000" })
 
 function mouseDown() {
@@ -123,6 +123,8 @@ function clear_preview() {
 // zmiana narzędzia
 function setTool({ type = false, size = false, color = false }) {
     if (type) {
+        document.getElementById(`btn_${tool.type}`).style.backgroundColor=""
+        document.getElementById(`btn_${type}`).style.backgroundColor="#92f4fb"
         tool.type = type
         if (type == "eraser") ctx.globalCompositeOperation = "destination-out"
         else ctx.globalCompositeOperation = "source-over"

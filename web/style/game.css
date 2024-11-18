@@ -17,69 +17,56 @@ body {
     background-color: rgb(184, 184, 184);
     background-size: 50px 50px;
     background-image:
-    linear-gradient(to right, rgb(105, 105, 105) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(105, 105, 105) 1px, transparent 1px);
+        linear-gradient(to right, rgb(105, 105, 105) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(105, 105, 105) 1px, transparent 1px);
     user-select: none;
-}
-
-#playersList {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 220px;
-    height: 100vh;
-    background-color: #cceeff;
-    padding: 10px;
-    overflow-y: auto;
-    border-right: 2px solid #4da6ff;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-}
-
-#playersList.open {
-    transform: translateX(0);
-}
-
-#closePlayerList, #openPlayerList {
-    position: fixed;
-    left: 10px;
-    top: 10px;
-    width: 30px;
-    height: 30px;
-    background-color: #4da6ff;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    font-size: 18px;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#closePlayerList {
-    display: none;
-}
-
-#closePlayerList:hover, #openPlayerList:hover {
-    background-color: #003d99;
 }
 
 .toolBar {
     position: fixed;
-    top: 10px;
-    right: 10px;
+    top: 50%;
+    left: 10px;
     background-color: #f2f2f2;
     border: 1px solid #4da6ff;
-    padding: 8px;
-    width: 220px;
     border-radius: 5px;
     z-index: 5;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
+    transform: translateY(-50%);
 }
 
-canvas{
+.tool_btn, #color {
+    margin: 5px;
+    border: none;
+    padding: 3px;
+    width: 45px;
+    height: 45px;
+    border-radius: 30%;
+}
+
+#color {
+    padding: 0px;
+}
+
+.tool_btn img {
+    width: 100%;
+    user-drag: none;
+    -webkit-user-drag: none;
+}
+
+.tool_btn:hover{
+    background-color: #92a5fb;
+}
+
+.slider {
+    writing-mode: bt-lr;
+    -webkit-appearance: slider-vertical;
+    appearance: slider-vertical;
+    width: 8px;
+    height: 100px;
+}
+
+canvas {
     position: absolute;
 }
 
@@ -93,7 +80,7 @@ canvas{
     transform: translate(-50%, -50%);
 }
 
-.player_prof{
+.player_prof {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -101,7 +88,8 @@ canvas{
     font-weight: bolder;
     transition: all 0.3s ease-out;
 }
-.player_prof img{
+
+.player_prof img {
     width: 60px;
     height: 60px;
     border: 4px solid #000;
