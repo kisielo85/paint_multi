@@ -112,14 +112,18 @@ server.on('upgrade', (request, socket, head) => {
     });
 });
 
+function sendDataToRoomOtherClients(ws, data){
+    pathClients[ws.path].forEach((client) => {
+        if (client !== ws && client.readyState === WebSocket.OPEN)
+            client.send(JSON.stringify(data));
+    });
+}
+
 // WebSocket server connection
 wss.on('connection', (ws) => {
     console.log(`New WebSocket connection on path: ${ws.path}`);
-
-    pathClients[ws.path].forEach((client) => {
-        if (client !== ws && client.readyState === WebSocket.OPEN) 
-            client.send(JSON.stringify({"action":"connect", "user": ws.user}));
-    })
+    pathClients[ws.path].forEach((client) => { if(client !== ws && client.readyState === WebSocket.OPEN) ws.send(JSON.stringify({"action":"connect", "user": client.user})) } )
+    sendDataToRoomOtherClients(ws, {"action":"connect", "user": ws.user})
 
     // Messages from clients
     ws.on('message', (message) => {
@@ -132,21 +136,22 @@ wss.on('connection', (ws) => {
 
         console.log(`Message:`, ws.user, data);
         if(typeof data["action"] != 'undefined'){
-            if(data["action"] == "move" || data["action"] == "draw")
-                pathClients[ws.path].forEach((client) => {
-                    if (client !== ws && client.readyState === WebSocket.OPEN)
-                        client.send(JSON.stringify(data));
-                });
+            switch(data["action"]){
+                case "draw":
+                    sendDataToRoomOtherClients(ws, data)
+                    break
+                case "move":
+                    data.id = ws.user.id;
+                    sendDataToRoomOtherClients(ws, data)
+                    break
+            }
         }
     });
 
     // Clean up on disconnect
     ws.on('close', () => {
         console.log(`Connection closed on path: ${ws.path}`);
-        pathClients[ws.path].forEach((client) => {
-            if (client !== ws && client.readyState === WebSocket.OPEN)
-            client.send(JSON.stringify({"action":"disconnect", "userID": ws.user.id}));
-        })
+        sendDataToRoomOtherClients(ws, {"action":"disconnect", "id": ws.user.id})
         pathClients[ws.path] = pathClients[ws.path].filter((client) => client !== ws);
         if(pathClients[ws.path].length == 0) delete pathClients[ws.path]
     });
