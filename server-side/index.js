@@ -130,7 +130,7 @@ server.on('upgrade', (request, socket, head) => {
     wss.handleUpgrade(request, socket, head, (ws) => {
         ws.path = pathname; // Store the path on the WebSocket instance
         let id = 0;
-        if (typeof pathClients[pathname] != 'undefined') {
+        if (typeof pathClients[pathname] == 'undefined') {
             createRoom(pathname)
         }else{
             if(pathClients[pathname].clients.length > 0)
