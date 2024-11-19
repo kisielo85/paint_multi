@@ -116,6 +116,14 @@ function drawRect(from, to, canv = ctx) {
     canv.stroke()
 }
 
+function updateCtx(b64){
+    const img = new Image();
+    img.onload = () => {
+        ctx.drawImage(img, 0, 0);
+    };
+    img.src = `data:image/png;base64,${b64}`; 
+}
+
 // czyści podgląd np. linii, prostokątu
 function clear_preview() {
     ctx_pr.clearRect(0, 0, canvas_preview.width, canvas_preview.height)

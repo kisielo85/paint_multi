@@ -1,4 +1,5 @@
 const express = require('express');
+const { createCanvas } = require('canvas');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
@@ -29,18 +30,10 @@ app.use(express.json());
 
 const catURL = "https://http.cat/"
 
-let Rooms = [
-    {
-        name: "public",
-        clients:[],
-        canvas: null,
-    }
-];
-
 // Generate roomCode wich dosnt exist yet
 function genRoom() {
     let randString = genRandString();
-    return RoomList.findIndex(ele => ele === randString) === -1 ? randString : genRoom();
+    return typeof pathClients[`/room/${randString}`] ? randString : genRoom();
 }
 
 const pathClients = {};
@@ -58,21 +51,56 @@ app.get('/gen-code', (req, res) => {
     const roomCode = genRoom();
     res.send(roomCode);
 });
+/*
+
+// Set background color
+ctx.fillStyle = 'lightblue';
+ctx.fillRect(0, 0, width, height);
+
+// Draw a red rectangle
+ctx.fillStyle = 'red';
+ctx.fillRect(100, 100, 200, 150);
+
+// Draw some text
+ctx.font = '30px Arial';
+ctx.fillStyle = 'black';
+ctx.fillText('Hello, Canvas!', 150, 300);
+
+// Save the canvas as an image
+const buffer = canvas.toBuffer('image/png');
+fs.writeFileSync('output.png', buffer);
+*/
+
+function createRoom(code){
+    if(typeof pathClients[`/room/${code}`] != 'undefined') return null
+    pathClients[`/room/${code}`] = { "ctx": createCanvas(2048, 2048).getContext('2d'), clients:[] };
+    pathClients[`/room/${code}`].ctx.lineCap = "round";
+    console.log(`made ${code} room`)
+    return pathClients[`/room/${code}`];
+}
 
 app.post('/add-room', (req, res) => {
     const { roomCode } = req.body;
-
+    
     if(typeof roomCode == 'undefined' || roomCode == ''){
         return res.status(411).send('Empty room code')
     }
 
-    if (RoomList.includes(roomCode)) {
+    if (typeof pathClients["/room/"+roomCode] != 'undefined') {
         return res.status(409).send('Room code already exists');
     }
+    
+    if (roomCode.length > 12) {
+        return res.status(404).send('Code too long, longer than 12');
+    }
 
-    RoomList.push(roomCode);
+    createRoom(roomCode)
+
     res.status(201).send(`Room ${roomCode} added successfully`);
+    
 });
+
+createRoom("public")
 
 // For unknown routes
 app.all('*', (req, res) => {
@@ -103,29 +131,76 @@ server.on('upgrade', (request, socket, head) => {
         ws.path = pathname; // Store the path on the WebSocket instance
         let id = 0;
         if (!pathClients[pathname]) {
-            pathClients[pathname] = [];
+            createRoom(pathname)
         }else{
-            console.log(pathClients[pathname][pathClients[pathname].length - 1])
-            id = pathClients[pathname][pathClients[pathname].length - 1].user.id + 1
+            if(pathClients[pathname].clients.length > 0)
+                id = pathClients[pathname].clients[pathClients[pathname].clients.length - 1].user.id + 1
         }
         ws.user = { "id":id, "username":username, "img":parseInt(imgID)}
-        console.log(ws)
-        pathClients[pathname].push(ws);
+        pathClients[pathname].clients.push(ws);
         wss.emit('connection', ws, request);
     });
 });
 
 function sendDataToRoomOtherClients(ws, data){
-    pathClients[ws.path].forEach((client) => {
+    pathClients[ws.path].clients.forEach((client) => {
         if (client !== ws && client.readyState === WebSocket.OPEN)
             client.send(JSON.stringify(data));
     });
 }
 
+// =============================
+
+
+let tool = {type: "brush"} // ustawienia narzędzia
+
+// odbieranie ruchów innych graczy
+function receiveData(p, type, size, color, ctx) {
+    ctx.globalCompositeOperation = type == "eraser" ? "destination-out" : "source-over"
+    
+    ctx.strokeStyle = color
+    ctx.lineWidth = size
+
+    ctx.beginPath()
+    switch (type) {
+        case "brush":
+        case "eraser":
+        case "line":
+            ctx.lineJoin = "round";
+            ctx.moveTo(p[0][0], p[0][1])
+            for (let i = 0; i < p.length; i++) {
+                ctx.lineTo(p[i][0], p[i][1])
+            }
+            break;
+
+        case "rect":
+            ctx.rect(p[0][0], p[0][1], p[1][0], p[1][1])
+            break;
+    }
+    ctx.stroke()
+
+    ctx.lineJoin = "miter";
+    ctx.strokeStyle = tool.color
+    ctx.lineWidth = tool.size
+    ctx.globalCompositeOperation = tool.type == "eraser" ? "destination-out" : "source-over"
+
+    //fs.writeFileSync('output.png', ctx.canvas.toBuffer('image/png'));
+}
+
+/*switch (d.action){
+    case "draw":
+        receiveData(d.points,d.type,d.size,d.color)
+        break
+}*/
+
+//===========================
+
+
 // WebSocket server connection
-wss.on('connection', (ws) => {
+wss.on('connection', async (ws) => {
     console.log(`New WebSocket connection on path: ${ws.path}`);
-    pathClients[ws.path].forEach((client) => { if(client !== ws && client.readyState === WebSocket.OPEN) ws.send(JSON.stringify({"action":"connect", "user": client.user})) } )
+    ws.send(JSON.stringify({"action":"ctxUpdate", "base64":await pathClients[ws.path].ctx.canvas.toBuffer('image/png').toString('base64')}))
+    pathClients[ws.path].clients.forEach((client) => { if(client !== ws && client.readyState === WebSocket.OPEN) ws.send(JSON.stringify({"action":"connect", "user": client.user})) } )
     sendDataToRoomOtherClients(ws, {"action":"connect", "user": ws.user})
 
     // Messages from clients
@@ -141,6 +216,7 @@ wss.on('connection', (ws) => {
         if(typeof data["action"] != 'undefined'){
             switch(data["action"]){
                 case "draw":
+                    receiveData(data.points, data.type, data.size, data.color, pathClients[ws.path].ctx)
                     sendDataToRoomOtherClients(ws, data)
                     break
                 case "move":
@@ -155,7 +231,7 @@ wss.on('connection', (ws) => {
     ws.on('close', () => {
         console.log(`Connection closed on path: ${ws.path}`);
         sendDataToRoomOtherClients(ws, {"action":"disconnect", "id": ws.user.id})
-        pathClients[ws.path] = pathClients[ws.path].filter((client) => client !== ws);
-        if(pathClients[ws.path].length == 0) delete pathClients[ws.path]
+        pathClients[ws.path].clients = pathClients[ws.path].clients.filter((client) => client !== ws);
+        if(ws.path != "/room/public" && pathClients[ws.path].clients.length == 0) delete pathClients[ws.path]
     });
 });

@@ -36,8 +36,9 @@
 
     <div class="roomCreate"  id="roomCreate" style="visibility: hidden;">
         <h2 class="roomh">Create a Room</h2>
-        Name: <input type="text"><br>
+        Code: <input type="text" id="crtRoomId" oninput="joinCode = this.value"><br>
         <div class="buttons">
+            <button class="btn btn-success" onclick="join(true)">create</button>
             <button class="btn btn-danger" onclick="back()">back</button>
         </div>
     </div>
@@ -59,9 +60,12 @@
             document.getElementById('roomSelect').style.visibility = "visible";
         }
 
-        function create_room(){
+        async function create_room(){
             document.getElementById('main').style.visibility = "hidden";
             document.getElementById('roomCreate').style.visibility = "visible";
+            let genCode = (await axios.get(`${fullURL}/gen-code`)).data
+            document.getElementById('crtRoomId').value = genCode
+            joinCode = genCode
         }
 
         function back(){
@@ -72,15 +76,22 @@
 
         let joinCode = ""
 
-        async function join(){
+        async function join(create = false){
             let name = document.getElementById("nameInput").value.trim()
             if(name.length == 0){
                 alert("input name")
                 return
             }
-            if(joinCode == "public")
+            if(create){
+                console.log(await axios.post(`${fullURL}/add-room`, {"roomCode":joinCode}))
                 window.location.href = `./web/game.html?username=${name}&img=${current_prof}&code=${joinCode}`
-            if((await axios.get(`${(serverURL.startsWith("127.0.0.1") || serverURL.startsWith("localhost") ? "http" : "https")}://${serverURL}/room?code=${joinCode}`)).data){
+                return
+            }
+            if(joinCode == "public"){
+                window.location.href = `./web/game.html?username=${name}&img=${current_prof}&code=${joinCode}`
+                return
+            }
+            if((await axios.get(`${fullURL}/room?code=${joinCode}`)).data){
                 window.location.href = `./web/game.html?username=${name}&img=${current_prof}&code=${joinCode}`
             }else{
                 alert("room noot exist :<")

@@ -36,6 +36,9 @@ if(roomCode == null || userName == null || imageID == null || parseInt(imageID) 
             case "disconnect":
                 del_player(d.id)
                 break
+            case "ctxUpdate":
+                updateCtx(d.base64)
+                break
         }
     };
 
