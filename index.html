@@ -36,7 +36,7 @@
 
     <div class="roomCreate"  id="roomCreate" style="visibility: hidden;">
         <h2 class="roomh">Create a Room</h2>
-        Code: <input type="text" id="crtRoomId" oninput="joinCode = this.value"><br>
+        Code: <input type="text" id="crtRoomId" maxlength="12" oninput="joinCode = this.value"><br>
         <div class="buttons">
             <button class="btn btn-success" onclick="join(true)">create</button>
             <button class="btn btn-danger" onclick="back()">back</button>
