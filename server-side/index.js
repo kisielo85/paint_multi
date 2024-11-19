@@ -130,7 +130,7 @@ server.on('upgrade', (request, socket, head) => {
     wss.handleUpgrade(request, socket, head, (ws) => {
         ws.path = pathname; // Store the path on the WebSocket instance
         let id = 0;
-        if (!pathClients[pathname]) {
+        if (typeof pathClients[pathname] != 'undefined') {
             createRoom(pathname)
         }else{
             if(pathClients[pathname].clients.length > 0)
@@ -232,6 +232,11 @@ wss.on('connection', async (ws) => {
         console.log(`Connection closed on path: ${ws.path}`);
         sendDataToRoomOtherClients(ws, {"action":"disconnect", "id": ws.user.id})
         pathClients[ws.path].clients = pathClients[ws.path].clients.filter((client) => client !== ws);
-        if(ws.path != "/room/public" && pathClients[ws.path].clients.length == 0) delete pathClients[ws.path]
+        
+        if(ws.path != "/room/public" && pathClients[ws.path].clients.length == 0)
+        setTimeout(() => {
+            if(ws.path != "/room/public" && pathClients[ws.path].clients.length == 0)
+                delete pathClients[ws.path]
+        }, 20000)
     });
 });
