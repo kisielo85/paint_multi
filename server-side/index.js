@@ -235,7 +235,7 @@ wss.on('connection', async (ws) => {
         
         if(ws.path != "/room/public" && pathClients[ws.path].clients.length == 0)
         setTimeout(() => {
-            if(ws.path != "/room/public" && pathClients[ws.path].clients.length == 0)
+            if(typeof pathClients[ws.path] != 'undefined' && ws.path != "/room/public" && pathClients[ws.path].clients.length == 0)
                 delete pathClients[ws.path]
         }, 20000)
     });
