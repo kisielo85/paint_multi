@@ -15,7 +15,7 @@ let pos = { x: 0, y: 0 } // pozycja myszy
 let cache_pos = { x: 0, y: 0 } // zapisana pozycja, używane do prostokątków itp
 let bufferPoints = [] // dane czekające na wysłanie
 let bufferCount = 0 // ilość danych w bufferPoints
-let tool = {type: "brush"} // ustawienia narzędzia
+let tool = { type: "brush" } // ustawienia narzędzia
 setTool({ type: "brush", size: 30, color: "#000000" })
 
 function mouseDown() {
@@ -79,7 +79,7 @@ function mouseMove(event) {
         case "brush":
         case "eraser":
             drawLine(old_pos, pos)
-            console.log("count",bufferPoints.length)
+            console.log("count", bufferPoints.length)
 
             // zapisuje ścieżke, i raz na jakiś czas ją wysyła
             bufferPoints.push([pos.x, pos.y])
@@ -116,12 +116,12 @@ function drawRect(from, to, canv = ctx) {
     canv.stroke()
 }
 
-function updateCtx(b64){
+function updateCtx(b64) {
     const img = new Image();
     img.onload = () => {
         ctx.drawImage(img, 0, 0);
     };
-    img.src = `data:image/png;base64,${b64}`; 
+    img.src = `data:image/png;base64,${b64}`;
 }
 
 // czyści podgląd np. linii, prostokątu
@@ -132,8 +132,8 @@ function clear_preview() {
 // zmiana narzędzia
 function setTool({ type = false, size = false, color = false }) {
     if (type) {
-        document.getElementById(`btn_${tool.type}`).style.backgroundColor=""
-        document.getElementById(`btn_${type}`).style.backgroundColor="#92f4fb"
+        document.getElementById(`btn_${tool.type}`).style.backgroundColor = ""
+        document.getElementById(`btn_${type}`).style.backgroundColor = "#92f4fb"
         tool.type = type
         if (type == "eraser") ctx.globalCompositeOperation = "destination-out"
         else ctx.globalCompositeOperation = "source-over"
@@ -164,7 +164,7 @@ function setTool({ type = false, size = false, color = false }) {
 
 // wysyłanie pozycji myszki
 setInterval(() => { moveUpdate() }, 150)
-let last_pos = {x:0,y:0}
+let last_pos = { x: 0, y: 0 }
 function moveUpdate() {
     if (pos.x === last_pos.x && pos.y === last_pos.y) { return }
     last_pos = { ...pos }
@@ -185,7 +185,7 @@ function sendDraw(points = [[cache_pos.x, cache_pos.y], [pos.x, pos.y]], type = 
 // odbieranie ruchów innych graczy
 function receiveData(p, type, size, color) {
     ctx.globalCompositeOperation = type == "eraser" ? "destination-out" : "source-over"
-    
+
     ctx.strokeStyle = color
     ctx.lineWidth = size
 
@@ -212,3 +212,9 @@ function receiveData(p, type, size, color) {
     ctx.lineWidth = tool.size
     ctx.globalCompositeOperation = tool.type == "eraser" ? "destination-out" : "source-over"
 }
+
+function screenResized() {
+    document.documentElement.style.setProperty('--grid-width', 2 / window.devicePixelRatio + "px");
+}
+screenResized();
+window.addEventListener('resize', screenResized);
