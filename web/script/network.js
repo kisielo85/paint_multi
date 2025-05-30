@@ -1,7 +1,7 @@
 const urlParams = new URLSearchParams(window.location.href.split("?")[1])
 let roomCode = urlParams.get("code")
-let userName = urlParams.get("username")
-let imageID = urlParams.get("img")
+let userName = getCookie("userName")
+let imageID = getCookie("imageID")
 console.log(userName, imageID, roomCode);
 
 if(roomCode == null || userName == null || imageID == null || parseInt(imageID) == NaN){

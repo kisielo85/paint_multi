@@ -212,9 +212,3 @@ function receiveData(p, type, size, color) {
     ctx.lineWidth = tool.size
     ctx.globalCompositeOperation = tool.type == "eraser" ? "destination-out" : "source-over"
 }
-
-function screenResized() {
-    document.documentElement.style.setProperty('--grid-width', 2 / window.devicePixelRatio + "px");
-}
-screenResized();
-window.addEventListener('resize', screenResized);
