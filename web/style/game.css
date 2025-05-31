@@ -1,20 +1,15 @@
 :root {
     --tool-size: 15px;
     --tool-color: #000;
+    --canvas_padding: 50px;
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #e6f7ff;
     margin: 0;
-    padding: 0;
+    height: 100vh;
     font-family: Arial, sans-serif;
     color: #333;
     background-color: #000000;
-    
     user-select: none;
 }
 
@@ -50,7 +45,7 @@ body {
     -webkit-user-drag: none;
 }
 
-.tool_btn:hover{
+.tool_btn:hover {
     background-color: #92a5fb;
 }
 
@@ -62,11 +57,25 @@ body {
     margin-right: -50px;
 }
 
-canvas {
-    position: absolute;
+.canvas_container {
+    top: max(calc(50vh - 1024px - var(--canvas_padding)), 0px);
+    position: relative;
+    margin: auto;
+    width: 2048px;
+    height: 2048px;
+    padding: var(--canvas_padding);
+    background-color: #151515;
+    overflow: hidden;
 }
 
-#canvas{
+canvas {
+    position: absolute;
+    top: var(--canvas_padding);
+    left: var(--canvas_padding);
+}
+
+
+#canvas {
     background-color: rgb(184, 184, 184);
     background-size: 50px 50px;
     background-image:

@@ -1,4 +1,5 @@
 const root = document.querySelector(':root');
+const canvas_container = document.getElementById("canvas_container");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const canvas_preview = document.getElementById("canvas_preview");
@@ -69,8 +70,8 @@ function mouseMove(event) {
     pos.y = parseInt(event.clientY - rect.top);
 
     if (cursor_visible) {
-        cursor.style.left = `${event.pageX}px`;
-        cursor.style.top = `${event.pageY}px`;
+        cursor.style.left = `${pos.x + 50}px`; // te dodatkowe px to --canvas_padding
+        cursor.style.top = `${pos.y + 50}px`;
     }
 
     if (!isDown) { return }
@@ -79,7 +80,6 @@ function mouseMove(event) {
         case "brush":
         case "eraser":
             drawLine(old_pos, pos)
-            console.log("count", bufferPoints.length)
 
             // zapisuje ścieżke, i raz na jakiś czas ją wysyła
             bufferPoints.push([pos.x, pos.y])
@@ -161,6 +161,10 @@ function setTool({ type = false, size = false, color = false }) {
         ctx.strokeStyle = color
     }
 }
+setTool({
+    size: document.getElementById('range').value,
+    color: document.getElementById('color').value
+})
 
 // wysyłanie pozycji myszki
 setInterval(() => { moveUpdate() }, 150)

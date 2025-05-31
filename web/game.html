@@ -10,21 +10,23 @@
     <script src="../config.js"></script>
 </head>
 
-<body>
-
-    <canvas id="canvas" width="2048" height="2048" onmousedown="mouseDown()" onmouseup="mouseUp()" onmousemove="mouseMove(event)"></canvas>
-    <canvas id="canvas_preview" width="2048" height="2048" style="pointer-events: none;"></canvas>
-    <div id="custom-cursor"></div>
-
-    <div id="players_container">
+<body onmousemove="mouseMove(event)" onmousedown="mouseDown()" onmouseup="mouseUp()">
+    <div class="canvas_container">
+        <canvas id="canvas" width="2048" height="2048"></canvas>
+        <canvas id="canvas_preview" width="2048" height="2048" style="pointer-events: none;"></canvas>
+        <div id="custom-cursor"></div>
+        <div id="players_container">
+        </div>
+        
     </div>
+    
     
     <div class="toolBar">
         <button onclick='setTool({type:"brush"})' id="btn_brush" class="tool_btn"><img src='img/tools/brush.svg' alt="brush"></button><br>
         <button onclick='setTool({type:"line"})' id="btn_line" class="tool_btn"><img src='img/tools/line.svg' alt="line"></button><br>
         <button onclick='setTool({type:"rect"})' id="btn_rect" class="tool_btn"><img src='img/tools/rect.svg' alt="rectangle"></button><br>
         <button onclick='setTool({type:"eraser"})' id="btn_eraser" class="tool_btn"><img src='img/tools/eraser.svg' alt="eraser"></button><br>
-        <input type="range" oninput='setTool({size:this.value})' class="slider" min="4" max="100" value="30"><br>
+        <input type="range" id="range" oninput='setTool({size:this.value})' class="slider" min="4" max="100" value="30"><br>
         <input type="color" id="color" onchange='setTool({color:this.value})'/>
     </div>
     
