@@ -11,6 +11,7 @@ ctx_pr.globalAlpha = 0.3
 const cursor = document.getElementById('custom-cursor');
 let cursor_visible = true
 let isDown = false
+let move = false
 
 let pos = { x: 0, y: 0 } // pozycja myszy
 let cache_pos = { x: 0, y: 0 } // zapisana pozycja, używane do prostokątków itp
@@ -19,8 +20,14 @@ let bufferCount = 0 // ilość danych w bufferPoints
 let tool = { type: "brush" } // ustawienia narzędzia
 setTool({ type: "brush", size: 30, color: "#000000" })
 
-function mouseDown() {
+function mouseDown(e) {
     isDown = true
+    if (e.buttons >= 2) {
+        move = true
+        cache_pos.x = e.clientX
+        cache_pos.y = e.clientY
+        return
+    }
     switch (tool.type) {
         case "brush":
         case "eraser":
@@ -41,6 +48,7 @@ function mouseDown() {
 
 function mouseUp() {
     isDown = false
+    if (move) { move = false }
     switch (tool.type) {
         case "brush":
         case "eraser":
@@ -76,6 +84,13 @@ function mouseMove(event) {
 
     if (!isDown) { return }
 
+    if (move) {
+        window.scrollBy(cache_pos.x - event.clientX, cache_pos.y - event.clientY)
+        cache_pos.x = event.clientX
+        cache_pos.y = event.clientY
+        return
+    }
+
     switch (tool.type) {
         case "brush":
         case "eraser":
@@ -101,6 +116,10 @@ function mouseMove(event) {
             drawRect(cache_pos, pos, ctx_pr)
             break;
     }
+}
+
+function mouse_enter(e) {
+    if (e.buttons == 0) { mouseUp() }
 }
 
 function drawLine(from, to, canv = ctx) {

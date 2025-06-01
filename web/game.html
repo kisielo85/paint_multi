@@ -10,7 +10,7 @@
     <script src="../config.js"></script>
 </head>
 
-<body onmousemove="mouseMove(event)" onmousedown="mouseDown()" onmouseup="mouseUp()">
+<body onmouseenter="mouse_enter(event)" onmousemove="mouseMove(event)" onmousedown="mouseDown(event)" onmouseup="mouseUp()" oncontextmenu="return false">
     <div class="canvas_container">
         <canvas id="canvas" width="2048" height="2048"></canvas>
         <canvas id="canvas_preview" width="2048" height="2048" style="pointer-events: none;"></canvas>
